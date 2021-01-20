@@ -1,6 +1,8 @@
-## 실행 방법
-#####################################################################
-# CS:APP Malloc Lab
+
+# MALLOC_LAB
+동적 메모리 할당 구현
+
+## 실행방법
 # Handout files for students
 #
 # Copyright (c) 2002, R. Bryant and D. O'Hallaron, All rights reserved.
@@ -50,4 +52,5 @@ The -V option prints out helpful tracing and summary information.
 To get a list of the driver flags:
 
 	unix> mdriver -h
+
 
