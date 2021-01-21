@@ -5,7 +5,8 @@ _이 글은 <Computer Systems A Programmer's Perspective>, Randal E. Bryant의 �
 
 >**구현 이슈**
 >* malloc을 위한 가용블럭을 어떻게 관리할 것인가?
->* 할당 블럭에서 가용 블럭으로 바뀐 공간을 어떻게 효율적으로 재사용 할 것인가?
+>* 할당 블럭에서 가용 블럭으로 바뀐 공간을 어떻게 효율적으로 재사용 할 것인가? (이용도)
+>* 전체 속도를 어떻게 향상시킬 것인가? (처리량)
 
 ## Implicit (묵시적 가용리스트)
 <img src="https://user-images.githubusercontent.com/61036124/105174781-68531800-5b66-11eb-921c-b6b3200f1052.jpg" width="750px" title="px(픽셀) 크기 설정" alt="RubberDuck"></img><br/>
