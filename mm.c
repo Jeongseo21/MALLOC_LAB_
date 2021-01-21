@@ -96,6 +96,7 @@ int mm_init(void)
     // heap_listp를 프롤로그 헤더 다음칸에 위치시킨다
     heap_listp += DSIZE;
     free_listp = heap_listp; // free_listp 초기화
+    //<코드리뷰> 프롤로그 블록을 6칸으로 만들어 가용리스트의 시작점을 지정해준 부분이 좋은 생각이었던 것 같습니다.
 
     if (extend_heap(CHUNKSIZE/DSIZE) == NULL)
     {
@@ -117,6 +118,9 @@ static void *extend_heap(size_t words)
 
     size = words * DSIZE;
     if ((int)(bp = mem_sbrk(size)) == -1) // 1.bp를 long형으로 바꿔주는 이유, 2.(long)과 (void*)를 비교할 수 있는지..
+                                          // <코드리뷰> 주석과 달리 int형으로 캐스팅한 이유가 궁금하네요. 보통 long이나 void*를 사용해
+                                          // 비교하는데.. 음.. (void*)-1이 0xffffffff로 알고 있는데 이를 int나 long이나 같은 값으로
+                                          // 반환하는 것 같고... int형으로 변환해도 주소값이 오버하는 일은 없나보네요...
     {
         return NULL; // 할당받을 수 없을 때 NULL을 반환
     }
@@ -149,6 +153,8 @@ void *mm_malloc(size_t size)
     {
         asize = DSIZE * ((size + (DSIZE) + (DSIZE-1)) / DSIZE); //size보다 큰 8의 배수 중 최소값
     }
+    // <코드리뷰> 정확히는 size에 헤더와 푸터의 공간인 8을 더한 후 그것보다 큰 8의 배수 중 최소값이 맞는 것 같습니다.
+    // 예를 들어, size가 9일때, 9보다 큰 8의 배수 중 최소값은 16이지만 위의 결과는 24입니다. 헤더와 푸터의 공간 8이 추가됐기 때문이지요.
 
     // asize값이 들어갈 수 있는 가용 공간을 찾는다. find_fit은 bp를 반환한다
 
@@ -181,6 +187,7 @@ static void *find_fit(size_t asize)
     void * bp;
     bp = free_listp;
 
+    // 프롤로그블록을 첫번째로 가용리스트에 연결시켜서 이런 종료조건을 만족할 수 있었군요. 좋은 생각인 것 같습니다.
     for (bp; GET_ALLOC(HDRP(bp)) != 1; bp = SUCC_FREEP(bp))
     {
         if (GET_SIZE(HDRP(bp)) >= asize)
@@ -216,6 +223,8 @@ static void place(void*bp, size_t asize)
     }
 }
 
+
+// <코드리뷰> 개인적으로 함수명이 함수의 기능을 잘 설명해 주는 것 같다고 느꼈습니다.
 void putFreeBlock(void *bp)
 {
     SUCC_FREEP(bp) = free_listp;
@@ -267,6 +276,8 @@ static void *coalesce(void *bp)
 
     // 이전 블럭, 다음 블럭이 모두 할당되어있을 때
     if (prev_alloc && next_alloc){}
+    // <코드리뷰> 음.. 불필요한 라인이 있는 것 같아 아쉬운 것 같습니다.
+
         // 이전 블럭은 가용 블럭이고 다음 블럭은 할당되어있을 때
     else if (!prev_alloc && next_alloc)
     {
